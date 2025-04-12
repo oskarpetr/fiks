@@ -1,0 +1,220 @@
+# to run: "fikslang code.fiks stack.json"
+SWAP
+PUSH 0
+ROTATE 3
+SWAP
+JMP loop
+
+increment_8:
+    ROTATE 8
+    ROTATE 7
+
+    PUSH 99
+    STF
+    
+    PUSH 1
+    DELETE
+
+    ROTATE 8
+    PUSH 7
+    DELETE
+    
+    PUSH 1
+    ADD_ALL
+
+    PUSH 100
+    STF
+
+    CLEAR
+    FTS 99
+
+    PUSH 2
+    DELETE
+
+    FTS 100
+    PUSH 1
+    DELETE
+    
+    ROTATE 7
+    ROTATE 8
+RET
+
+increment_4:
+    ROTATE 4
+    ROTATE 3
+
+    PUSH 99
+    STF
+    
+    PUSH 1
+    DELETE
+
+    ROTATE 4
+    PUSH 3
+    DELETE
+    
+    PUSH 1
+    ADD_ALL
+
+    PUSH 100
+    STF
+
+    CLEAR
+    FTS 99
+
+    PUSH 2
+    DELETE
+
+    FTS 100
+    PUSH 1
+    DELETE
+    
+    ROTATE 3
+    ROTATE 4
+RET
+
+increment_3:
+    ROTATE 3
+    ROTATE 2
+
+    PUSH 99
+    STF
+    
+    PUSH 1
+    DELETE
+
+    ROTATE 3
+    PUSH 2
+    DELETE
+    
+    PUSH 1
+    ADD_ALL
+
+    PUSH 100
+    STF
+
+    CLEAR
+    FTS 99
+
+    PUSH 2
+    DELETE
+
+    FTS 100
+    PUSH 1
+    DELETE
+    
+    ROTATE 2
+    ROTATE 3
+RET
+
+increment_change:
+    ROTATE 7
+    ROTATE 6
+
+    ROTATE 6
+    PROC increment_8
+    ROTATE 6
+
+    ROTATE 6
+    ROTATE 7
+RET
+
+loop:
+    DUP
+    LOAD_FROM_MEM
+    ROTATE 3
+
+    DUP
+    LOAD_FROM_MEM
+    ROTATE 3
+
+    SWAP
+    ROTATE 4
+
+    CMP
+    SKIP_IF EQ0
+        PROC increment_change
+
+    PUSH 1
+    DELETE
+    SKIP_IF NE0
+        JMP end_first
+    
+    PUSH 1
+    DELETE
+    SKIP_IF NE0
+        JMP end_second
+    
+    PUSH 1
+    DELETE
+
+    PROC increment_4
+    SWAP
+    PROC increment_4
+    SWAP
+
+    JMP loop
+RET
+
+exit:
+    PUSH 2
+    DELETE
+    EXIT
+RET
+
+end_first:
+    PUSH 3
+    DELETE
+
+    DUP
+    LOAD_FROM_MEM
+    SKIP_IF EQ0
+        JMP ef_loop
+    
+    PUSH 2
+    DELETE
+    EXIT
+
+    ef_loop:
+        PUSH 1
+        DELETE
+
+        PROC increment_3
+        DUP
+        LOAD_FROM_MEM
+        SKIP_IF NE0
+            JMP exit
+
+        ROTATE 3
+        PROC increment_4
+        ROTATE 3
+
+        JMP ef_loop
+    RET
+RET
+
+end_second:
+    PUSH 1
+    DELETE
+    SWAP
+    PUSH 1
+    DELETE
+
+    JMP es_loop
+
+    es_loop:
+        PROC increment_3
+        DUP
+        LOAD_FROM_MEM
+        SKIP_IF NE0
+            JMP exit
+        
+        PUSH 1
+        DELETE
+        SWAP
+        PROC increment_3
+        SWAP
+
+        JMP es_loop
+    RET
+RET
